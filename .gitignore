@@ -1,0 +1,24 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/ejemplo-archivo/node_modules
+/ejemplo-archivo/.pnp
+/ejemplo-archivo/.pnp.js
+
+# testing
+/ejemplo-archivo/coverage
+
+# production
+/ejemplo-archivo/build
+
+# misc
+/ejemplo-archivo/.DS_Store
+/ejemplo-archivo/.env
+/ejemplo-archivo/.env.local
+/ejemplo-archivo/.env.development.local
+/ejemplo-archivo/.env.test.local
+/ejemplo-archivo/.env.production.local
+
+/ejemplo-archivo-backend/node_modules
+/ejemplo-archivo-backend/.env
+/ejemplo-archivo-backend/dist
