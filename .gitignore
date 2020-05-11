@@ -22,3 +22,4 @@
 /ejemplo-archivo-backend/node_modules
 /ejemplo-archivo-backend/.env
 /ejemplo-archivo-backend/dist
+/ejemplo-archivo-backend/public

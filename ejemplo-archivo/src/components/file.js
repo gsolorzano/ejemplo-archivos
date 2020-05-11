@@ -1,7 +1,7 @@
 import React from "react";
 import { Input, Label, Button } from "reactstrap";
-// import { API } from "../services/env";
-// import axios from "axios";
+import { API } from "../services/env";
+import axios from "axios";
 
 class File extends React.Component {
 
@@ -20,9 +20,20 @@ class File extends React.Component {
 
     async handleSubmit() {
         console.log(this.state.file);
+        const data = new FormData()
+        data.append('tabla', 'article');
+        //data.append('autores', [{nombre:"Hola"},{nombre:"Hola2"}]);
+        data.append('file', this.state.file);
         // await axios.delete(`${API}/student`, {
         //     data: { id_language: 1 },
         // })
+        await axios.post(`${API}/file`,
+            data
+            , { // receive two parameter endpoint url ,form data 
+            })
+            .then(res => { // then print response status
+                console.log(res.data.path)
+            });
     }
 
     render() {
