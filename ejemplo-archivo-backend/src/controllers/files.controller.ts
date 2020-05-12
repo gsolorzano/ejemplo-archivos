@@ -1,26 +1,8 @@
 import { Request, Response } from 'express';
 import { PoolClient } from 'pg';
 import { pool } from '../database/connection';
-import multer from 'multer';
 import path from 'path'
-
-var filename = "";
-var type = "";
-
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        var url = path.join('public/'+req.body.tabla)
-        type = req.body.tabla;
-        cb(null, url)
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname)
-        // console.log(req.body.tabla);
-        filename = Date.now() + '-' + file.originalname;
-    }
-})
-
-const upload = multer({ storage: storage }).single('file')
+import Save from './savefile'
 
 export class FileController {
 
@@ -29,25 +11,16 @@ export class FileController {
         // const query = `select getcenters('centersCursor'); `;
         // const client: PoolClient = await pool.connect();
         try {
-            await upload(req, res, function (err: any) {
-                if (err instanceof multer.MulterError) {
-                    return res.status(500).json(err)
-                } else if (err) {
-                    return res.status(500).json(err)
-                }
-                //return res.status(200).send(req.file)
-            });
+            var filename = await Save(req, res);
             console.log(filename);
-            //console.log(path.join(__dirname+'../../..' + '/public/' + type + '/' + filename));
-            var url = path.join(__dirname+'../../..' + '/public/' + type + '/' + filename);
-            // const values = [req.body.career_code, req.body.name, req.body.degree];
-
+            var url = path.join(__dirname + '../../..' + '/public/' + req.body.tabla + '/' + filename);
+            console.log(url)
+            var n = JSON.parse(req.body.autores)
+            console.log(n[1].nombre);
             // await client.query('BEGIN');
             // await client.query(query, values);
             // await client.query('COMMIT');
-
             // client.release();
-
             return res.status(200).json({
                 path: url
             });
