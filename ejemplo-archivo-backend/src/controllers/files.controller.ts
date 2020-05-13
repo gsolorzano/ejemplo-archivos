@@ -8,19 +8,21 @@ export class FileController {
 
 
     async saveFile(req: Request, res: Response): Promise<Response> {
-        // const query = `select getcenters('centersCursor'); `;
-        // const client: PoolClient = await pool.connect();
+        const query = `SELECT insertdocumet($1,$2,$3);`;
+        //const client: PoolClient = await pool.connect();
         try {
-            var filename = await Save(req, res);
-            console.log(filename);
-            var url = path.join(__dirname + '../../..' + '/public/' + req.body.tabla + '/' + filename);
+            var vals = await Save(req, res);
+            console.log(vals[0]);
+            var url = path.join(__dirname + '../../..' + '/public/' + req.body.tabla + '/' + vals[0]);
             console.log(url)
             var n = JSON.parse(req.body.autores)
             console.log(n[1].nombre);
-            // await client.query('BEGIN');
-            // await client.query(query, values);
-            // await client.query('COMMIT');
-            // client.release();
+            console.log(vals[1])
+            const values = [vals[2],url,vals[1]];
+            await pool.query('BEGIN');
+            await pool.query(query, values);
+            await pool.query('COMMIT');
+            // pool.release();
             return res.status(200).json({
                 path: url
             });
