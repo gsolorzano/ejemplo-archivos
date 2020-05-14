@@ -23,7 +23,8 @@ class File extends React.Component {
         console.log(this.state.file);
         const data = new FormData()
         data.append('tabla', 'article');
-        //data.append('autores', [{nombre:"Hola"},{nombre:"Hola2"}]);
+        const json = JSON.stringify([{nombre:"Hola"},{nombre:"Hola2"}]);
+        data.append('autores', json);
         data.append('file', this.state.file);
         // await axios.delete(`${API}/student`, {
         //     data: { id_language: 1 },
