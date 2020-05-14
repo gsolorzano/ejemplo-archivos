@@ -4,7 +4,7 @@ import Career_Controller from '../controllers/files.controller'
 
 const router = Router();
 
-router.post('/', Career_Controller.saveFile);
+router.get('/', Career_Controller.getProjectAll);
 
 
 export default router;

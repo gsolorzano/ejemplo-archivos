@@ -12,6 +12,7 @@ class File extends React.Component {
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.getprojectAll = this.getprojectAll.bind(this);
     }
 
     handleChange(e) {
@@ -36,6 +37,14 @@ class File extends React.Component {
             });
     }
 
+
+    async getprojectAll (){
+        const res = await axios.get(`${API}/projectall`);
+        const provinceData = res.data;
+        console.log(provinceData)
+
+    }
+
     render() {
         return (
             <div>
@@ -47,6 +56,12 @@ class File extends React.Component {
                 />
                 <br></br>
                 <Button color="primary" type="button" onClick={() => this.handleSubmit()}>Upload</Button>
+                <br></br>
+                <br></br>
+                <br></br>
+                <br></br>
+                
+                <Button color="primary" type="button" onClick={() => this.getprojectAll()}>Ver</Button>
             </div>
         )
     };

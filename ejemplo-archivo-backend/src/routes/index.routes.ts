@@ -1,4 +1,5 @@
 import File from './files.routes';
+import Request from './request.routes';
 
 /**
  * 
@@ -8,4 +9,6 @@ import File from './files.routes';
  */
 export function addRoutes(app: any) {
     app.use('/file',File);
+    app.use('/projectall',  Request);
 }
+
