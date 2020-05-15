@@ -9,6 +9,6 @@ import Request from './request.routes';
  */
 export function addRoutes(app: any) {
     app.use('/file',File);
-    app.use('/projectall',  Request);
+    app.use('/project',  Request);
 }
 

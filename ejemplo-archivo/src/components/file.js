@@ -8,11 +8,15 @@ class File extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            file: null
+            file: null,
+            listaTodosProyectos : [],
+            quantity : "",
+            selected : ""
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.getprojectAll = this.getprojectAll.bind(this);
+       
     }
 
     handleChange(e) {
@@ -38,13 +42,32 @@ class File extends React.Component {
             });
     }
 
+    getquantity = (event) => {
+        this.setState({ quantity: event.target.value });
+    }
+
+    async getprojectId  () {
+        const res = await axios.get(`${API}/project/projectid/${this.state.quantity}`);
+        const dataProjects = res.data;
+        this.setState({selected: "id: " +  dataProjects.project.id_document + " -  name:  " +  dataProjects.project.name});
+        console.log(this.state.selected)
+    }
+
 
     async getprojectAll (){
-        const res = await axios.get(`${API}/projectall`);
-        const provinceData = res.data;
-        console.log(provinceData)
+        const res = await axios.get(`${API}/project/projectAll`);
+        const dataProjects = res.data;
 
+        let lista = [];
+        for (let i = 0 ; i < dataProjects.length ; i ++){
+            lista.push(" id: "+ dataProjects[i].id_document+ '  -  ' + "nombre: " + dataProjects[i].name  );
+        }
+        this.setState({listaTodosProyectos: lista});
+        console.log(this.state.listaTodosProyectos)
     }
+
+
+
 
     render() {
         return (
@@ -59,11 +82,31 @@ class File extends React.Component {
                 <Button color="primary" type="button" onClick={() => this.handleSubmit()}>Upload</Button>
                 <br></br>
                 <br></br>
+                          
+                <Button color="primary" type="button" onClick={() => this.getprojectAll()}>Ver todos </Button>
                 <br></br>
                 <br></br>
                 
-                <Button color="primary" type="button" onClick={() => this.getprojectAll()}>Ver</Button>
+                <h1>{this.state.listaTodosProyectos}</h1>
+
+                <br></br>
+                <br></br>
+                <h1>Escriba un id</h1>
+                <Input
+                    type="number"
+                    onChange={this.getquantity}
+                />
+
+                <Button color="primary" type="button" onClick={() => this.getprojectId()}> Buscar </Button>
+                <br></br>
+                <br></br>
+                <h1>{this.state.selected }</h1>
+
+
+
             </div>
+
+
         )
     };
 

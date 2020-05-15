@@ -55,6 +55,37 @@ export class FileController {
         }
     }
 
+
+    async getProjectById (req: Request, res: Response): Promise<Response>  {
+        const getProject = `select getprojectbyid($1,'projectCursor');`;
+        const fetchProject = `FETCH ALL IN "projectCursor";`;
+        const client = await pool.connect();
+        try {
+            const id_project = req.params.id_project; // asi se llama el id de lo que llega aqui 
+            await client.query('BEGIN');
+            await client.query(getProject, [id_project]);
+            const project: QueryResult = await client.query(fetchProject);
+            await client.query('ROLLBACK');
+            client.release();
+            return res.json(
+                {
+                    'project': project.rows[0],
+                }
+            );
+        } catch (error) {
+            await client.query('ROLLBACK');
+            client.release();
+            console.log(error);
+            return res.send({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+    
+
+
+
+
 }
 
 const fileController = new FileController();
