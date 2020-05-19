@@ -11,11 +11,9 @@ const storage = multer.diskStorage({
     },
     filename: function (req, file, cb) {
         let hashCode = Math.random().toString(36).replace(/[^a-z]+/g, '');
-        cb(null, hashCode + '-' + file.originalname)
-        // console.log(req.body.tabla);
-        console.log(file.mimetype);
+        filename =  `${Date.now()}${hashCode}-${file.originalname}`;
+        cb(null, filename)
         ext = file.mimetype;
-        filename = hashCode + '-' + file.originalname;
     }
 })
 

@@ -3,8 +3,8 @@ DROP TABLE IF EXISTS public.document;
 
 create table public.document(
     id_document SERIAL PRIMARY KEY,
-    name varchar(300),
-    file_path varchar(400),
+    name varchar(400),
+    file_path varchar(500),
     file_extension varchar(100)
 );
 
