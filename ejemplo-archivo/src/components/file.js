@@ -48,6 +48,8 @@ class File extends React.Component {
                 />
                 <br></br>
                 <Button color="primary" type="button" onClick={() => this.handleSubmit()}>Upload</Button>
+                <br></br>
+                <a href='http://localhost:4000/article/1589849106993-sdfdsf.zip' download rel="noopener noreferrer" target="_blank">Click to download</a>
             </div>
         )
     };

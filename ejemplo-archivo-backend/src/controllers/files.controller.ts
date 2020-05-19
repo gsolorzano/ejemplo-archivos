@@ -11,14 +11,16 @@ export class FileController {
         const query = `SELECT insertdocumet($1,$2,$3);`;
         //const client: PoolClient = await pool.connect();
         try {
-            var vals = await Save(req, res);
+            let vals = await Save(req, res);
             console.log(vals[0]);
-            var url = path.join(__dirname + '../../..' + '/public/' + req.body.tabla + '/' + vals[0]);
+            //let url = path.join(__dirname + '../../..' + '/public/' + req.body.tabla + '/' + vals[0]);
+            let url = `${req.body.tabla}/${vals[0]}`;
             console.log(url)
-            var n = JSON.parse(req.body.autores)
+            let n = JSON.parse(req.body.autores)
+            console.log(`${req.body.tabla}/${vals[0]}`);
             console.log(n[1].nombre);
             console.log(vals[1])
-            const values = [vals[2],url,vals[1]];
+            const values = [vals[0],url,vals[1]];
             await pool.query('BEGIN');
             await pool.query(query, values);
             await pool.query('COMMIT');
