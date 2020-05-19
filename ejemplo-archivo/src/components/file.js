@@ -12,7 +12,7 @@ class File extends React.Component {
             file: null,
             fileChosen: null,
             files: [],
-            url: `http://localhost:4000/`
+            url: `${API}`
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -20,10 +20,10 @@ class File extends React.Component {
 
 
     getFiles = async () => {
-        const res = await axios.get(`http://localhost:4000/file`);
+        const res = await axios.get(`${API}/file`);
         const fileData = res.data;
         this.setState({ files: [] });
-        fileData.map(file => this.state.files.push({ label: file.name, value: file.file_path }))
+        fileData.map(file => this.state.files.push({ label: file.name, value: file.file_path, id: file.id_document }))
     };
 
     handleChange(e) {
@@ -32,18 +32,24 @@ class File extends React.Component {
 
     handleChangeFile = fileChosen => {
         this.setState({ fileChosen });
-        this.setState({ url: `http://localhost:4000/${fileChosen.value}` });
+        this.setState({ url: `${API}/${fileChosen.value}` });
     };
 
     componentDidMount() {
         this.getFiles();
     }
 
-    // handleClick = () => {
-    //     if (this.state.persona != null) {
-    //         alert("La persona seleccionada es: " + this.state.persona.label);
-    //     }
-    // }
+    handleClick = async () => {
+        if (this.state.fileChosen != null) {
+            const bod = {
+                dni: this.state.fileChosen.id,
+                path: this.state.fileChosen.value
+            }
+            await axios.delete(`${API}/file`, {data: bod});
+            this.setState({fileChosen: null});
+            this.getFiles();
+        }
+    }
 
     async handleSubmit() {
         console.log(this.state.file);
@@ -83,6 +89,8 @@ class File extends React.Component {
                 />
                 <br></br>
                 <a href={this.state.url} download rel="noopener noreferrer" target="_blank">Click to download</a>
+                <br></br>
+                <Button color="danger" type="button" onClick={() => this.handleClick()}>Borrar</Button>
             </div>
         )
     };

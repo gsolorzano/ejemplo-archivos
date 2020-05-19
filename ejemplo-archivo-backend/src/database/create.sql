@@ -14,3 +14,11 @@ BEGIN
   INSERT INTO public.document (name, file_path, file_extension) VALUES (n,fp,fe);
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION deletedocument(id integer) 
+RETURNS void AS $$
+BEGIN
+  DELETE FROM public.document
+  WHERE id_document = id;
+END;
+$$ LANGUAGE plpgsql;

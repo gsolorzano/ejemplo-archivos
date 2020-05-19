@@ -4,6 +4,7 @@ import { QueryResult } from 'pg';
 import { pool } from '../database/connection';
 import path from 'path'
 import Save from './savefile'
+import fs from 'fs'
 
 export class FileController {
 
@@ -72,6 +73,30 @@ export class FileController {
         } catch (error) {
             await client.query('ROLLBACK');
             client.release();
+            console.log(error);
+            return res.send({
+                msg: 'Internal Server Error'
+            });
+        }
+    }
+
+    async deleteFile (req: Request, res: Response): Promise<Response>  {
+        const deleteD = `select deletedocument($1);`;
+        //const client = await pool.connect();
+        try {
+            const id= req.body.dni;
+            const p = req.body.path;
+            let fullPath = path.join(__dirname + '../../..' + '/public/' + p);
+            console.log(id);
+            console.log(fullPath);
+            fs.unlinkSync(fullPath);
+            await pool.query('BEGIN');
+            await pool.query(deleteD, [id]);
+            await pool.query('COMMIT');
+            return res.json(
+                {res:"Exito"}
+            );
+        } catch (error) {
             console.log(error);
             return res.send({
                 msg: 'Internal Server Error'
