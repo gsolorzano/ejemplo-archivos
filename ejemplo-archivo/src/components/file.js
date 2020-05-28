@@ -12,10 +12,13 @@ class File extends React.Component {
             file: null,
             fileChosen: null,
             files: [],
-            url: `${API}`
+            url: `${API}`,
+            fileChosenMultiple: []
         };
         this.handleChange = this.handleChange.bind(this);
+        this.handleChangeMultiple = this.handleChangeMultiple.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleSubmitMultiple = this.handleSubmitMultiple.bind(this);
     }
 
 
@@ -28,6 +31,15 @@ class File extends React.Component {
 
     handleChange(e) {
         this.setState({ file: e.target.files[0] });
+    }
+
+    handleChangeMultiple(e) {
+        this.setState({ fileChosenMultiple: [] });
+        let arr = []
+        for(let i = 0;i<e.target.files.length;i++){
+            arr.push(e.target.files[i]);
+        }
+        this.setState({fileChosenMultiple:arr});
     }
 
     handleChangeFile = fileChosen => {
@@ -68,6 +80,27 @@ class File extends React.Component {
         this.getFiles();
     }
 
+    async handleSubmitMultiple() {
+        console.log("Todo: "+this.state.fileChosenMultiple);
+        const data = new FormData()
+        data.append('tabla', 'article');
+        //const json = JSON.stringify([{ nombre: "Hola" }, { nombre: "Hola2" }]);
+        //data.append('autores', json);
+        console.log(this.state.fileChosenMultiple.length);
+        for(let i = 0;i<this.state.fileChosenMultiple.length;i++){
+            console.log(i);
+            data.append('file', this.state.fileChosenMultiple[i]);
+        }
+        // await axios.delete(`${API}/student`, {
+        //     data: { id_language: 1 },
+        // })
+        await axios.post(`${API}/filemultiple`,
+            data
+            , { // receive two parameter endpoint url ,form data 
+            });
+        this.getFiles();
+    }
+
     render() {
         return (
             <div>
@@ -91,6 +124,19 @@ class File extends React.Component {
                 <a href={this.state.url} download rel="noopener noreferrer" target="_blank">Click to download</a>
                 <br></br>
                 <Button color="danger" type="button" onClick={() => this.handleClick()}>Borrar</Button>
+                <br></br>
+                <br></br>
+                <br></br>
+                <br></br>
+                <br></br>
+                <Label>Seleccione uno o más archivos:</Label>
+                <Input
+                    type="file"
+                    onChange={this.handleChangeMultiple}
+                    multiple="multiple"
+                />
+                <br></br>
+                <Button color="primary" type="button" onClick={() => this.handleSubmitMultiple()}>Upload</Button>
             </div>
         )
     };

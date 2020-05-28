@@ -24,6 +24,26 @@ export class FileController {
         }
     }
 
+    async saveFileMultiple(req: Request, res: Response): Promise<Response> {
+        //const query = `SELECT insertdocumet($1,$2,$3);`;
+        try {
+            console.log(req.body.tabla);
+            console.log(req.files)
+            //let url = `${req.body.tabla}/${req.file.filename}`;
+            //const values = [req.file.filename, url, req.file.mimetype];
+            //console.log(values);
+            // await pool.query("BEGIN");
+            // await pool.query(query, values);
+            // await pool.query("COMMIT");
+            return res.status(200).json({
+                // path: url,
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json("Internal Server Error");
+        }
+    }
+
     async getProjectAll(req: Request, res: Response): Promise<Response> {
         const query = `select getprojectsall('projectsCursor');`;
         const fetch = `FETCH ALL IN "projectsCursor";`;
