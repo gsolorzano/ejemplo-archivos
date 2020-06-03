@@ -1,5 +1,5 @@
 import React from "react";
-import { Input, Label, Button } from "reactstrap";
+import { Input, Label, Button, Progress } from "reactstrap";
 import { API } from "../services/env";
 import axios from "axios";
 import Select from 'react-select';
@@ -13,6 +13,7 @@ class File extends React.Component {
             fileChosen: null,
             files: [],
             url: `${API}`,
+            uploadPercentage: 0,
             fileChosenMultiple: []
         };
         this.handleChange = this.handleChange.bind(this);
@@ -36,10 +37,10 @@ class File extends React.Component {
     handleChangeMultiple(e) {
         this.setState({ fileChosenMultiple: [] });
         let arr = []
-        for(let i = 0;i<e.target.files.length;i++){
+        for (let i = 0; i < e.target.files.length; i++) {
             arr.push(e.target.files[i]);
         }
-        this.setState({fileChosenMultiple:arr});
+        this.setState({ fileChosenMultiple: arr });
     }
 
     handleChangeFile = fileChosen => {
@@ -57,13 +58,26 @@ class File extends React.Component {
                 dni: this.state.fileChosen.id,
                 path: this.state.fileChosen.value
             }
-            await axios.delete(`${API}/file`, {data: bod});
-            this.setState({fileChosen: null});
+            await axios.delete(`${API}/file`, { data: bod });
+            this.setState({ fileChosen: null });
             this.getFiles();
         }
     }
 
     async handleSubmit() {
+
+        const options = {
+            onUploadProgress: (progressEvent) => {
+                const { loaded, total } = progressEvent;
+                let percent = Math.floor((loaded * 100) / total)
+                console.log(`${loaded}kb of ${total}kb | ${percent}%`);
+
+                if (percent < 100) {
+                    this.setState({ uploadPercentage: percent })
+                }
+            }
+        }
+
         console.log(this.state.file);
         const data = new FormData()
         data.append('tabla', 'article');
@@ -74,20 +88,25 @@ class File extends React.Component {
         //     data: { id_language: 1 },
         // })
         await axios.post(`${API}/file`,
-            data
-            , { // receive two parameter endpoint url ,form data 
-            });
+            data, options).then(res => {
+                console.log(res)
+                this.setState({ uploadPercentage: 100 }, () => {
+                    setTimeout(() => {
+                        this.setState({ uploadPercentage: 0 })
+                    }, 1000);
+                })
+            })
         this.getFiles();
     }
 
     async handleSubmitMultiple() {
-        console.log("Todo: "+this.state.fileChosenMultiple);
+        console.log("Todo: " + this.state.fileChosenMultiple);
         const data = new FormData()
         data.append('tabla', 'article');
         //const json = JSON.stringify([{ nombre: "Hola" }, { nombre: "Hola2" }]);
         //data.append('autores', json);
         console.log(this.state.fileChosenMultiple.length);
-        for(let i = 0;i<this.state.fileChosenMultiple.length;i++){
+        for (let i = 0; i < this.state.fileChosenMultiple.length; i++) {
             console.log(i);
             data.append('file', this.state.fileChosenMultiple[i]);
         }
@@ -102,6 +121,7 @@ class File extends React.Component {
     }
 
     render() {
+        const { uploadPercentage } = this.state;
         return (
             <div>
                 <br></br>
@@ -110,6 +130,7 @@ class File extends React.Component {
                     type="file"
                     onChange={this.handleChange}
                 />
+                { uploadPercentage > 0 && <Progress value={uploadPercentage} active="True" label={`${uploadPercentage}%`} /> }
                 <br></br>
                 <Button color="primary" type="button" onClick={() => this.handleSubmit()}>Upload</Button>
                 <br></br>
